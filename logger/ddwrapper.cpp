@@ -165,7 +165,13 @@ HRESULT WINAPI DirectDrawCreateEx(GUID FAR * lpGuid, LPVOID  *lplpDD, REFIID  ii
 
 	if (iid == IID_IDirectDraw4)
 	{
-		logf(0, "IDDRAW4 requested");
+		LPDIRECTDRAW4 FAR dummy;
+		HRESULT h = DirectDrawCreateEx_fn(lpGuid, (LPVOID*) &dummy, iid, pUnkOuter);
+		*lplpDD = (LPVOID) new myIDDraw4(dummy);
+
+		logf(0, "IDDRAW4 creation result: %x ptr %08x",h,lplpDD);
+		
+		return (h);
 	}
 
 	if (iid == IID_IDirectDraw7)
