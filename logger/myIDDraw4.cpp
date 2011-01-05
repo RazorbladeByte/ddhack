@@ -100,6 +100,9 @@ HRESULT  __stdcall myIDDraw4::CreateSurface(LPDDSURFACEDESC2 a, LPDIRECTDRAWSURF
 	HRESULT r = m_pIDDraw->CreateSurface(a, b, c);
 	logf(this, "myIDDraw4::CreateSurface([%d,0x%x,%d,%d,%d,%d,%d], %08x, %08x) return %d", a->dwSize, a->dwFlags, a->dwWidth, a->dwHeight, a->lPitch, a->dwBackBufferCount, a->ddsCaps, b, c, r); 
 
+
+	*b = new myIDDrawSurface4(*b);
+
 	return r;
 }
 

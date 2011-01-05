@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ddwrapper"
 	ProjectGUID="{62CCD15B-C8B5-43BC-94A2-553B9CBF1D66}"
 	Keyword="Win32Proj"
@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ddraw.lib dxguid.lib"
-				OutputFile="E:\Program Files (x86)\wing commander\wc4\ddraw.dll"
+				OutputFile="out\ddraw.dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile="ddwrapper.def"
 				GenerateDebugInformation="true"
@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\myIDDraw4.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\myIDDraw7.cpp"
 				>
 			</File>
@@ -212,6 +216,22 @@
 			</File>
 			<File
 				RelativePath=".\myIDDrawSurface1.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\myIDDrawSurface2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\myIDDrawSurface3.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\myIDDrawSurface4.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\myIDDrawSurface7.cpp"
 				>
 			</File>
 			<File
@@ -239,6 +259,10 @@
 			Name="headers"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
+			<File
+				RelativePath=".\ddraw.h"
+				>
+			</File>
 			<File
 				RelativePath=".\ddwrapper.h"
 				>
