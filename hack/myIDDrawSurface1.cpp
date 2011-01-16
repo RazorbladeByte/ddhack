@@ -103,32 +103,7 @@ HRESULT  __stdcall myIDDrawSurface1::Blt(LPRECT a,LPDIRECTDRAWSURFACE b, LPRECT 
 	myIDDrawSurface1 *src = NULL;
 	if (b) src = (myIDDrawSurface1*)b;
 
-	if (a && c)
-		logf("myIDDrawSurface1::Blt([%d,%d,%d,%d],%08x,[%d,%d,%d,%d],%d,%08x)",
-			a->top,a->left,a->bottom,a->right,
-			b,
-			c->top,c->left,c->bottom,c->right,
-			d,
-			e);
-	else
-	if (a)
-		logf("myIDDrawSurface1::Blt([%d,%d,%d,%d],%08x,[null],%d,%08x)",
-			a->top,a->left,a->bottom,a->right,
-			b,
-			d,
-			e);
-	else
-	if (c)
-		logf("myIDDrawSurface1::Blt([null],%08x,[%d,%d,%d,%d],%d,%08x)",
-			b,
-			c->top,c->left,c->bottom,c->right,
-			d,
-			e);
-	else
-		logf("myIDDrawSurface1::Blt([null],%08x,[null],%d,%08x)",
-			b,
-			d,
-			e);
+	//Sorry, removed logging from here until we work out why AOE crashes here with it on....
 
 	if (b == NULL)
 	{

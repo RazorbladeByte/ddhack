@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ddhack"
 	ProjectGUID="{62CCD15B-C8B5-43BC-94A2-553B9CBF1D66}"
 	Keyword="Win32Proj"
@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ddraw.lib dxguid.lib opengl32.lib"
-				OutputFile="E:\Program Files (x86)\wing commander\wc4\ddraw.dll"
+				OutputFile="out\ddraw.dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile="ddhack.def"
 				DelayLoadDLLs="opengl32.dll"
@@ -145,7 +145,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ddraw.lib dxguid.lib opengl32.lib"
-				OutputFile="E:\Program Files (x86)\wing commander\wc4\ddraw.dll"
+				OutputFile="out\ddraw.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile="ddhack.def"
 				DelayLoadDLLs="opengl32.dll"
