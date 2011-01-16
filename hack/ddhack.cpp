@@ -436,12 +436,9 @@ void updatescreen()
 		glTexCoord2f(w,h);  glVertex2f( 1, -1);	
 		glTexCoord2f(0,h);        glVertex2f(-1, -1);
 		glEnd();
-
 	}
 	else
 	{
-		w = (gRealScreenHeight * aspect) / gRealScreenWidth;
-		h = (gRealScreenWidth * (1 / aspect)) / gRealScreenHeight;
 		// Do the actual rendering.
 		glBegin(GL_TRIANGLE_FAN);
 		glTexCoord2f(0,0); glVertex2f( -w,  h);
