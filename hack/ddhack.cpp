@@ -53,6 +53,7 @@ int gSmooth = 0;
 int gShowLogo = 0;
 int gHalfAndHalf = 0;
 int gOldLCD = 0;
+int gIgnoreAspect = 0;
 int gScanDouble = 0;
 int gAltWinPos = 0;
 int gBlurWc3Video = 0;
@@ -424,15 +425,37 @@ void updatescreen()
         glColor3f(1.0f,1.0f,1.0f); 
 	}
 
-	// Do the actual rendering.
+	if (gIgnoreAspect)
+	{
+		w = (float)gScreenWidth / (float)tex_w;
+		h = (float)gScreenHeight / (float)tex_h;
+		// Do the actual rendering.
+		glBegin(GL_TRIANGLE_FAN);
+		glTexCoord2f(0,0);              glVertex2f(-1,  1);
+		glTexCoord2f(w,0);        glVertex2f( 1,  1);
+		glTexCoord2f(w,h);  glVertex2f( 1, -1);	
+		glTexCoord2f(0,h);        glVertex2f(-1, -1);
+		glEnd();
 
-    glBegin(GL_TRIANGLE_FAN);
-        glTexCoord2f(0,0); glVertex2f( -w,  h);
-        glTexCoord2f(u,0); glVertex2f(  w,  h);
-        glTexCoord2f(u,v); glVertex2f(  w, -h);	
-        glTexCoord2f(0,v); glVertex2f( -w, -h);
-    glEnd();
+	}
+	else
+	{
+		w = (gRealScreenHeight * aspect) / gRealScreenWidth;
+		h = (gRealScreenWidth * (1 / aspect)) / gRealScreenHeight;
+		// Do the actual rendering.
+		glBegin(GL_TRIANGLE_FAN);
+		glTexCoord2f(0,0); glVertex2f( -w,  h);
+		glTexCoord2f(u,0); glVertex2f(  w,  h);
+		glTexCoord2f(u,v); glVertex2f(  w, -h);	
+		glTexCoord2f(0,v); glVertex2f( -w, -h);
+		glEnd();
+
+	}
+
+
     
+	
+
 
 	SwapBuffers(gWindowDC);
 }
@@ -789,6 +812,8 @@ void InitInstance(HANDLE hModule)
 					gScanDouble = 1;
 				if (_stricmp(t, "altwinpos") == 0)
 					gAltWinPos = 1;
+				if (_stricmp(t, "ignoreaspect") == 0)
+					gIgnoreAspect = 1;
 				if (_stricmp(t, "wc3blurvideo") == 0)
 					gBlurWc3Video = 1;
 				if (_stricmp(t, "wc3smallvid") == 0)
