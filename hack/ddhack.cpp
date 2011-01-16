@@ -54,6 +54,7 @@ int gShowLogo = 0;
 int gHalfAndHalf = 0;
 int gOldLCD = 0;
 int gIgnoreAspect = 0;
+int gVsync = 0;
 int gScanDouble = 0;
 int gAltWinPos = 0;
 int gBlurWc3Video = 0;
@@ -449,11 +450,6 @@ void updatescreen()
 
 	}
 
-
-    
-	
-
-
 	SwapBuffers(gWindowDC);
 }
 
@@ -575,7 +571,7 @@ void init_gl()
     PIXELFORMATDESCRIPTOR pfd;
     pfd.nSize=sizeof(PIXELFORMATDESCRIPTOR);                             // Size 
     pfd.nVersion=1;                                                      // Version
-    pfd.dwFlags=PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL|PFD_DOUBLEBUFFER;  // Selected flags
+    pfd.dwFlags=PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL;  // Selected flags
     pfd.iPixelType=PFD_TYPE_RGBA;                                        // Pixelformat
     pfd.cColorBits=16;                                                   // Pixel depth
     pfd.cDepthBits=16;                                                   // Zbuffer depth
@@ -595,6 +591,23 @@ void init_gl()
 	} while (!gOpenGLRC);
 
 	wglMakeCurrent(gWindowDC, gOpenGLRC);
+
+	char *glext = (char *)glGetString(GL_EXTENSIONS);
+	if(glext && strstr(glext, "WGL_EXT_swap_control"))
+	{
+		BOOL (APIENTRY *wglSwapIntervalEXT)(int) = (BOOL (APIENTRY *)(int))wglGetProcAddress("wglSwapIntervalEXT");
+		if(wglSwapIntervalEXT)
+		{
+			if(gVsync)
+			{
+				wglSwapIntervalEXT(1);
+			}
+			else
+			{
+				wglSwapIntervalEXT(0);
+			}
+		}
+	}
 
 	ShowWindow(gHwnd, SW_SHOW);
 	SetForegroundWindow(gHwnd);
@@ -809,12 +822,14 @@ void InitInstance(HANDLE hModule)
 					gScanDouble = 1;
 				if (_stricmp(t, "altwinpos") == 0)
 					gAltWinPos = 1;
-				if (_stricmp(t, "ignoreaspect") == 0)
-					gIgnoreAspect = 1;
 				if (_stricmp(t, "wc3blurvideo") == 0)
 					gBlurWc3Video = 1;
 				if (_stricmp(t, "wc3smallvid") == 0)
 					gWc3SmallVid = 1;
+				if (_stricmp(t, "ignoreaspect") == 0)
+					gIgnoreAspect = 1;
+				if (_stricmp(t, "vsync") == 0)
+					gVsync = 1;
 				
 				t = c + 1;				
 			}
