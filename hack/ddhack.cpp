@@ -778,66 +778,25 @@ HRESULT WINAPI DllGetClassObject (const CLSID &rclsid, const IID &riid, void **p
 	return(DDERR_UNSUPPORTED);
 }
 
-
+#define INI_FILE "./ddhack.ini"
+#define INI_READ_STRING(section,key,default,buf,size) GetPrivateProfileStringA(section,key,default,buf,size,INI_FILE)
+#define INI_READ_INT(section,key,default) GetPrivateProfileIntA(section,key,default,INI_FILE)
 
 void InitInstance(HANDLE hModule) 
 {
 	logf("InitInstance.");
 
 	// Our extremely simple config file handling..
-
-	FILE * f = fopen("ddhack.cfg","rb");
-	if (f)
-	{
-		fseek(f,0,SEEK_END);
-		int len = ftell(f);
-		char * t = new char[len+1];
-		fseek(f,0,SEEK_SET);
-		fread(t, 1, len, f);		
-		fclose(f);
-		t[len] = 0;
-		char * c = t;
-		int i;
-		for (i = 0; i <= len; i++)
-		{			
-			if (*c == ' ' || *c == 0)
-			{
-				if (*c == 0)
-					c--;
-				else
-					*c = 0; // terminate the string
-				if (_stricmp(t,"bilinear") == 0)
-					gSmooth = 1;
-				if (_stricmp(t, "halfnhalf") == 0)
-					gSmooth = gHalfAndHalf = 1;
-				if (_stricmp(t, "showlogo") == 0)
-					gShowLogo = 1;
-				if (_stricmp(t, "subtleoldlcd") == 0)
-					gOldLCD = 1;
-				if (_stricmp(t, "oldlcd") == 0)
-					gOldLCD = 2;
-				if (_stricmp(t, "veryoldlcd") == 0)
-					gOldLCD = 4;
-				if (_stricmp(t, "wc3scandouble") == 0)
-					gScanDouble = 1;
-				if (_stricmp(t, "altwinpos") == 0)
-					gAltWinPos = 1;
-				if (_stricmp(t, "wc3blurvideo") == 0)
-					gBlurWc3Video = 1;
-				if (_stricmp(t, "wc3smallvid") == 0)
-					gWc3SmallVid = 1;
-				if (_stricmp(t, "ignoreaspect") == 0)
-					gIgnoreAspect = 1;
-				if (_stricmp(t, "vsync") == 0)
-					gVsync = 1;
-				
-				t = c + 1;				
-			}
-			c++;
-		}
-		delete[] t;		
-	}
-
+	gSmooth=INI_READ_INT("Rendering","bilinear_filter",0);
+	gSmooth=gHalfAndHalf=INI_READ_INT("Rendering","halfnhalf",0);
+	gShowLogo=INI_READ_INT("Rendering","show_logo",0);
+	gOldLCD=INI_READ_INT("Rendering","old_lcd_level",0);
+	gScanDouble=INI_READ_INT("Rendering","wc3scandouble",0);
+	gBlurWc3Video=INI_READ_INT("Rendering","wc3blurvideo",0);
+	gWc3SmallVid=INI_READ_INT("Rendering","wc3smallvid",0);
+	gAltWinPos=INI_READ_INT("Rendering","altwinpos",0);
+	gIgnoreAspect=INI_READ_INT("Rendering","ignore_aspect_ratio",0);
+	gVsync=INI_READ_INT("Rendering","vsync",0);
 	// Init some defaults..
 	gHinst = NULL;
 	gHwnd = NULL;
