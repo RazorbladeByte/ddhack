@@ -53,13 +53,13 @@ int gSmooth = 0;
 int gShowLogo = 0;
 int gHalfAndHalf = 0;
 int gOldLCD = 0;
-int gIgnoreAspect = 0;
-int gVsync = 0;
 int gScanDouble = 0;
 int gAltWinPos = 0;
 int gBlurWc3Video = 0;
 int gWc3SmallVid = 0;
+int gIgnoreAspect = 0;
 int gGDI = 0;
+int gVsync = 0;
 int temp[640*480];
 
 #pragma data_seg ()
@@ -426,6 +426,7 @@ void updatescreen()
         glColor3f(1.0f,1.0f,1.0f); 
 	}
 
+	// Do the actual rendering.
 	if (gIgnoreAspect)
 	{
 		w = (float)gScreenWidth / (float)tex_w;
@@ -434,7 +435,7 @@ void updatescreen()
 		glBegin(GL_TRIANGLE_FAN);
 		glTexCoord2f(0,0);              glVertex2f(-1,  1);
 		glTexCoord2f(w,0);        glVertex2f( 1,  1);
-		glTexCoord2f(w,h);  glVertex2f( 1, -1);	
+		glTexCoord2f(w,h);  glVertex2f( 1, -1); 
 		glTexCoord2f(0,h);        glVertex2f(-1, -1);
 		glEnd();
 	}
@@ -444,7 +445,7 @@ void updatescreen()
 		glBegin(GL_TRIANGLE_FAN);
 		glTexCoord2f(0,0); glVertex2f( -w,  h);
 		glTexCoord2f(u,0); glVertex2f(  w,  h);
-		glTexCoord2f(u,v); glVertex2f(  w, -h);	
+		glTexCoord2f(u,v); glVertex2f(  w, -h); 
 		glTexCoord2f(0,v); glVertex2f( -w, -h);
 		glEnd();
 
@@ -484,14 +485,12 @@ LRESULT CALLBACK newwinproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SETFOCUS: 
 		{
 			focus = 1;
-
 			RECT r;
 			r.top = 0;
 			r.left = 0;
 			r.bottom = gScreenHeight;
 			r.right = gScreenWidth;
 			ClipCursor(&r);
-
 			SetCursorPos(gScreenWidth / 2, gScreenHeight / 2);
 			ShowCursor(0); // clipcursor doesn't work with cursor disabled. Yay.
 
@@ -501,6 +500,12 @@ LRESULT CALLBACK newwinproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+	case WM_MBUTTONDBLCLK:
+	case WM_LBUTTONDBLCLK:
+	case WM_RBUTTONDBLCLK:
+	case WM_NCMOUSEMOVE:
 	case WM_MOUSEMOVE:
 		{
 			if (!focus)
@@ -571,7 +576,7 @@ void init_gl()
     PIXELFORMATDESCRIPTOR pfd;
     pfd.nSize=sizeof(PIXELFORMATDESCRIPTOR);                             // Size 
     pfd.nVersion=1;                                                      // Version
-    pfd.dwFlags=PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL;  // Selected flags
+    pfd.dwFlags=PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL|PFD_DOUBLEBUFFER;  // Selected flags
     pfd.iPixelType=PFD_TYPE_RGBA;                                        // Pixelformat
     pfd.cColorBits=16;                                                   // Pixel depth
     pfd.cDepthBits=16;                                                   // Zbuffer depth
@@ -591,7 +596,6 @@ void init_gl()
 	} while (!gOpenGLRC);
 
 	wglMakeCurrent(gWindowDC, gOpenGLRC);
-
 	char *glext = (char *)glGetString(GL_EXTENSIONS);
 	if(glext && strstr(glext, "WGL_EXT_swap_control"))
 	{
@@ -608,6 +612,7 @@ void init_gl()
 			}
 		}
 	}
+
 
 	ShowWindow(gHwnd, SW_SHOW);
 	SetForegroundWindow(gHwnd);
@@ -778,14 +783,13 @@ HRESULT WINAPI DllGetClassObject (const CLSID &rclsid, const IID &riid, void **p
 	return(DDERR_UNSUPPORTED);
 }
 
+
 #define INI_FILE "./ddhack.ini"
 #define INI_READ_STRING(section,key,default,buf,size) GetPrivateProfileStringA(section,key,default,buf,size,INI_FILE)
 #define INI_READ_INT(section,key,default) GetPrivateProfileIntA(section,key,default,INI_FILE)
-
 void InitInstance(HANDLE hModule) 
 {
 	logf("InitInstance.");
-
 	// Our extremely simple config file handling..
 	gSmooth=INI_READ_INT("Rendering","bilinear_filter",0);
 	gSmooth=gHalfAndHalf=INI_READ_INT("Rendering","halfnhalf",0);
@@ -797,6 +801,8 @@ void InitInstance(HANDLE hModule)
 	gAltWinPos=INI_READ_INT("Rendering","altwinpos",0);
 	gIgnoreAspect=INI_READ_INT("Rendering","ignore_aspect_ratio",0);
 	gVsync=INI_READ_INT("Rendering","vsync",0);
+
+
 	// Init some defaults..
 	gHinst = NULL;
 	gHwnd = NULL;
